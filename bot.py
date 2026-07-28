@@ -15,6 +15,7 @@ Telegram Bot لطلاب جامعة النجاح - الإصدار المطور
 import sqlite3
 import asyncio
 import logging
+import os
 from datetime import datetime
 from telegram import Update, Bot, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
@@ -27,6 +28,16 @@ from telegram.ext import (
     CallbackQueryHandler
 )
 import aiohttp
+from dotenv import load_dotenv
+
+# تحميل المتغيرات من ملف .env إذا وُجد
+load_dotenv()
+
+# قراءة التوكن من متغير البيئة
+TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+
+if not TOKEN:
+    raise ValueError("❌ خطأ: لم يتم العثور على توكن البوت! يرجى تعيين متغير البيئة TELEGRAM_BOT_TOKEN")
 
 # إعداد التسجيل
 logging.basicConfig(
@@ -649,15 +660,9 @@ class NajahBot:
 
 def main():
     """الدالة الرئيسية"""
-    import os
     
-    # توكن البوت المقدم
-    token = os.getenv('TELEGRAM_BOT_TOKEN', '8937034906:AAGez184aYpJkuK1VaU_CGO7u6PcPbaCG4A')
-    
-    if not token:
-        print("❌ خطأ: يرجى设置 متغير البيئة TELEGRAM_BOT_TOKEN")
-        print("مثال: export TELEGRAM_BOT_TOKEN='your_bot_token_here'")
-        return
+    # قراءة التوكن من متغير البيئة (تم تعريفه في أعلى الملف)
+    token = TOKEN
     
     bot = NajahBot(token)
     bot.run()
